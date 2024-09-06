@@ -1,8 +1,8 @@
-# Band Gap Calculation using Tauc Plot
+# Band Gap Calculation using Tauc Plot an
 
-This web application allows users to calculate the band gap of semiconductors using reflectance data via the Tauc plot method. The app is built with [Streamlit](https://streamlit.io/) and provides an interactive interface to upload data, visualize spectra, and perform band gap calculations.
+This web application allows users to calculate the band gap of semiconductors using reflectance data via the Tauc plot method. Additionally, the app integrates a **CrossRef-based literature search** to compare your calculated band gap with published values. The app is built with [Streamlit](https://streamlit.io/) and provides an interactive interface to upload data, visualize spectra, perform band gap calculations, and search the scientific literature.
 
-[Link to the App](https://app-tauc-plot-jcnkr6edgwkuumfqgk52qj.streamlit.app/)
+[Link to the App](https://app-bandgap-app-lk2dpmuh369fge7zbuvqkh.streamlit.app/)
 
 ## Features
 
