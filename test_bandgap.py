@@ -306,7 +306,7 @@ def main():
         # Add literature benchmark feature
         st.write("Compare with Literature Data:")
         common_name = st.text_input("Enter common name of the material:")
-        #chemical_composition = st.text_input("Enter chemical composition:")
+        #chemical_composition = st.text_input("Enter material name or search term:")
         #cas_number = st.text_input("Enter CAS number (optional):")
 
         if st.button("Search Literature"):
