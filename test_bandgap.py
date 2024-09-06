@@ -182,6 +182,9 @@ def main():
     This app allows you to upload reflectance data, calculate the band gap of a semiconductor using the Tauc plot method, 
     and compare it with literature values.
     """)
+    st.markdown("""
+    Check out the project on [GitHub](https://github.com/gadoseb/Streamlit-BandGap-App/tree/main_with_lit)
+    """)
 
     # File upload
     uploaded_file = st.file_uploader("Upload your data (CSV, XLSX, or TXT format)", type=["csv", "xlsx", "txt"])
