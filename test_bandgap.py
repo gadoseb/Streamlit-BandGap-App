@@ -4,6 +4,9 @@ import numpy as np
 import matplotlib.pyplot as plt
 from scipy.optimize import curve_fit
 from io import StringIO
+import requests
+import re
+from bs4 import BeautifulSoup
 
 # Define the Tauc plot fitting function (for linear region)
 def linear_fit(x, m, c):
@@ -27,11 +30,8 @@ def load_data(uploaded_file, file_type):
         return pd.read_csv(uploaded_file, delimiter='\t')  # Assuming tab-delimited txt file
 
 # Export data to CSV
-def export_to_csv(wavelength, reflectance, absorbance, photon_energy, y, x_fit, y_fit, band_gap):
+def export_to_csv(photon_energy, y, x_fit, y_fit, band_gap):
     df = pd.DataFrame({
-        'Wavelength (nm)': wavelength,
-        'Reflectance': reflectance,
-        'Absorbance': absorbance,
         'Photon Energy (eV)': photon_energy,
         'Tauc Plot Value': y,
         'Fitted Photon Energy (eV)': np.concatenate([x_fit, np.full(len(photon_energy) - len(x_fit), np.nan)]),
@@ -42,20 +42,145 @@ def export_to_csv(wavelength, reflectance, absorbance, photon_energy, y, x_fit, 
     return csv
 
 # Export data to TXT
-def export_to_txt(wavelength, reflectance, absorbance, photon_energy, y, x_fit, y_fit, band_gap):
+def export_to_txt(photon_energy, y, x_fit, y_fit, band_gap):
     output = StringIO()
-    output.write("Wavelength (nm),Reflectance,Absorbance,Photon Energy (eV),Tauc Plot Value,Fitted Photon Energy (eV),Fitted Tauc Plot Value,Band Gap (eV)\n")
-    for i in range(len(photon_energy)):
-        output.write(f"{wavelength[i]},{reflectance[i]},{absorbance[i]},{photon_energy[i]},{y[i]},{x_fit[i] if i < len(x_fit) else ''},{y_fit[i] if i < len(y_fit) else ''},{band_gap}\n")
+    output.write("Photon Energy (eV),Tauc Plot Value,Fitted Photon Energy (eV),Fitted Tauc Plot Value,Band Gap (eV)\n")
+
+    # Convert pandas Series to lists for safe indexing
+    photon_energy_list = photon_energy.tolist()
+    y_list = y.tolist()
+    x_fit_list = x_fit.tolist()
+    y_fit_list = y_fit.tolist()
+
+    max_length = max(len(photon_energy_list), len(x_fit_list))  # Ensure enough rows for all data
+
+    for i in range(max_length):
+        photon_energy_value = photon_energy_list[i] if i < len(photon_energy_list) else ''
+        y_value = y_list[i] if i < len(y_list) else ''
+        x_fit_value = x_fit_list[i] if i < len(x_fit_list) else ''
+        y_fit_value = y_fit_list[i] if i < len(y_fit_list) else ''
+        output.write(f"{photon_energy_value},{y_value},{x_fit_value},{y_fit_value},{band_gap}\n")
+
     txt = output.getvalue()
     return txt
 
+# Function to extract band gap values using regex
+def extract_band_gap(text):
+    # Regular expression to find values followed by "eV" and their positions
+    pattern = re.compile(r'(\d+\.?\d*)\s*(eV|electron\s*volts|ev|e\.v\.|e\.v)\b', re.IGNORECASE)
+    matches = pattern.finditer(text)
+    
+    results = []
+    
+    for match in matches:
+        value = float(match.group(1))
+        value_start = match.start()
+        
+        # Check the context around the value
+        context = text[max(0, value_start - 100):min(len(text), value_start + 100)].lower()
+        
+        # Check if "band gap", "bandgap", or "band-gap" is within 8 words of the value
+        if any(term in context for term in ['band gap', 'bandgap', 'band-gap']):
+            # Ensure it's within 8 words
+            context_words = re.findall(r'\b\w+\b', context)
+            value_index = context_words.index(match.group(2).lower()) - 1
+            band_gap_index = None
+            
+            # Look for "band gap", "bandgap", or "band-gap" within 8 words
+            for i, word in enumerate(context_words):
+                if word in ['band', 'gap', 'bandgap', 'band-gap']:
+                    if abs(i - value_index) <= 8:
+                        band_gap_index = i
+                        break
+
+            if band_gap_index is not None:
+                results.append(value)
+    
+    # Return the first band gap value found or None
+    return results[0] if results else None
+
+# Function to fetch full text from a URL (assumes DOI leads to a full-text URL)
+def fetch_full_text(url):
+    try:
+        response = requests.get(url)
+        if response.status_code == 200:
+            soup = BeautifulSoup(response.content, 'html.parser')
+            # Extract text from the soup object, may need to adjust based on the site structure
+            text = soup.get_text()
+            return text
+        #else:
+            #st.error("Failed to retrieve full text.")
+            #return None
+    except Exception as e:
+        st.error(f"An error occurred: {e}")
+        return None
+
+# Search literature using CrossRef API
+def search_literature(common_name): #, chemical_composition, cas_number):
+    query = ""
+    if common_name:
+        query += f"{common_name} "
+    #if chemical_composition:
+        #query += f"{chemical_composition} "
+    #if cas_number:
+        #query += f"CAS:{cas_number}"
+    
+    if not query.strip():
+        return None
+
+    search_url = f"https://api.crossref.org/works?query={query}&rows=5"
+    response = requests.get(search_url)
+    if response.status_code == 200:
+        data = response.json()
+        items = data.get('message', {}).get('items', [])
+
+        results = []
+        for item in items:
+            # Extract relevant fields
+            title = item.get('title', ['No title available'])[0]
+            abstract = item.get('abstract', 'No abstract available')
+            doi = item.get('DOI', 'No DOI available')
+            full_text_url = f"https://doi.org/{doi}"  # Assuming DOI provides a link to the full text
+            
+            # Extract band gap value from abstract if possible
+            band_gap_value = extract_band_gap(abstract)
+            if band_gap_value is None:
+                # Fetch and extract band gap value from full text if available
+                full_text = fetch_full_text(full_text_url)
+                if full_text:
+                    band_gap_value = extract_band_gap(full_text)
+                
+            # Create a DOI link if available
+            doi_link = f"[{doi}](https://doi.org/{doi})" if doi != 'No DOI available' else doi
+
+            results.append({
+                'title': title,
+                #'abstract': abstract,
+                'doi_link': doi_link,
+                'band_gap': band_gap_value
+            })
+        
+        return results
+    else:
+        st.error("Error fetching literature data.")
+        return None
+
+
+# Compare user band gap with extracted value
+def compare_band_gap(user_band_gap, extracted_band_gap):
+    tolerance = 0.1  # e.g., ±0.1 eV for close matches
+    extracted_value = float(extracted_band_gap.split()[0])
+    if abs(user_band_gap - extracted_value) <= tolerance:
+        return True
+    return False
+
 # Streamlit app starts here
 def main():
-    st.title("Band Gap Calculation using Tauc Plot")
+    st.title("Band Gap Calculation and Literature Comparison")
 
     st.write("""
-    This app allows you to upload reflectance data and calculate the band gap of a semiconductor using the Kubelk-Munk function and Tauc plot method.
+    This app allows you to upload reflectance data, calculate the band gap of a semiconductor using the Tauc plot method, 
+    and compare it with literature values.
     """)
 
     # File upload
@@ -155,10 +280,10 @@ def main():
         # Extrapolate to find band gap
         band_gap = -popt[1] / popt[0]
         st.write(f"Estimated Band Gap: {band_gap:.2f} eV")
-        
+
         # Prepare data for export
-        csv_data = export_to_csv(wavelength, reflectance, absorbance, photon_energy, y, x_fit, y_fit, band_gap)
-        txt_data = export_to_txt(wavelength, reflectance, absorbance, photon_energy, y, x_fit, y_fit, band_gap)
+        csv_data = export_to_csv(photon_energy, y, x_fit, y_fit, band_gap)
+        txt_data = export_to_txt(photon_energy, y, x_fit, y_fit, band_gap)
 
         # Provide download links
         st.download_button(
@@ -175,11 +300,31 @@ def main():
             mime="text/plain"
         )
 
+        # Add literature benchmark feature
+        st.write("Compare with Literature Data:")
+        common_name = st.text_input("Enter common name of the material:")
+        #chemical_composition = st.text_input("Enter chemical composition:")
+        #cas_number = st.text_input("Enter CAS number (optional):")
+
+        if st.button("Search Literature"):
+            if common_name: #or chemical_composition or cas_number:
+                results = search_literature(common_name) #, chemical_composition, cas_number)
+            if results:
+                st.write("Literature Search Results:")
+                for item in results:
+                    title = item.get('title', 'No title available')
+                    #abstract = item.get('abstract', 'No abstract available')
+                    doi_link = item.get('doi_link', 'No DOI available')
+                    band_gap_value = item.get('band_gap', 'No band gap value found')
+
+                    st.write(f"Title: {title}")
+                    #st.write(f"Abstract: {abstract[:500]}...")  # Display a snippet of the abstract
+                    st.write(f"DOI: {doi_link}")
+                    st.write(f"Band Gap: {band_gap_value if band_gap_value != 'No band gap value found' else 'Not available'}")
+
+                    st.write("---")
+            else:
+                st.write("No results found.")
+
 if __name__ == "__main__":
     main()
-
-
-
-
-
-
