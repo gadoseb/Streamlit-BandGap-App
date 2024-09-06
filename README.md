@@ -12,6 +12,22 @@ This web application allows users to calculate the band gap of semiconductors us
 - **Tauc Plot**: Generate the Tauc plot for both direct and indirect transitions.
 - **Band Gap Calculation**: Perform a linear fit on a selected range of the Tauc plot to calculate the band gap energy.
 - **Data Export**: Export the calculated data (Tauc plot values, linear fit results, and estimated band gap) to CSV and TXT files.
+- **CrossRef Literature Search**: Search scientific literature through CrossRef for publications related to your material and compare the extracted band gap values with your calculated result.
+
+## Literature Search with CrossRef
+
+The application includes a **literature search** feature using the [CrossRef API](https://www.crossref.org/services/metadata-delivery/rest-api/). With this feature, users can search for published scientific articles related to their material based on keywords, and retrieve relevant metadata such as:
+
+- **Title of the publication**
+- **DOI (Digital Object Identifier)** for direct access to the paper
+- **Estimated band gap value** (if available from the abstract or full text)
+
+### How it works:
+
+1. **Enter Search Term**: Input the common name of the material (e.g., "Band gap semiconductor").
+2. **Search for Publications**: The app queries CrossRef's API to retrieve the most relevant publications matching the search term.
+3. **Extract Band Gap Value**: The app attempts to extract band gap values from the abstract or full text of the publication (using regex pattern matching).
+4. **Compare with User's Band Gap**: The app compares the band gap you calculated with those extracted from the literature, helping you validate your result.
 
 ## Installation
 
@@ -35,6 +51,7 @@ This web application allows users to calculate the band gap of semiconductors us
 5. Generate the Tauc Plot and select the range for the linear fit.
 6. The band gap energy is calculated and displayed on the screen.
 7. Export the results as CSV or TXT files.
+8. Use the literature search feature to find related publications and compare the calculated band gap with values from the literature.
 
 ## File Formats
 
@@ -61,6 +78,12 @@ The data exported in CSV and TXT formats include the following:
 - **Calculation**: A linear fit will be performed in the selected region of the Tauc plot to estimate the band gap.
 - **Download**: Download CSV or TXT file of the calculated values
 
+## CrossRef Literature Search Example
+- **Search Query**: Enter the common name of the material (e.g., "semiconductor band gap").
+- **Results**:
+   1. Retrieve and display the titles, DOIs, and abstracts (if available).
+   2. Extract band gap values from the text or abstract.
+
 ## Dependencies
 
 The following Python packages are required:
@@ -70,6 +93,8 @@ The following Python packages are required:
 - numpy
 - matplotlib
 - scipy
+- requests (for CrossRef API integration)
+- BeautifulSoup (for web scraping if full text analysis is needed)
 
 ## How Tauc Plot works
 
