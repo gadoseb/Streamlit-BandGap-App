@@ -27,7 +27,8 @@ The application includes a **literature search** feature using the [CrossRef API
 1. **Enter Search Term**: Input the common name of the material (e.g., "Band gap semiconductor").
 2. **Search for Publications**: The app queries CrossRef's API to retrieve the most relevant publications matching the search term.
 3. **Extract Band Gap Value**: The app attempts to extract band gap values from the abstract or full text of the publication (using regex pattern matching).
-4. **Compare with User's Band Gap**: The app compares the band gap you calculated with those extracted from the literature, helping you validate your result.
+
+Note: If the paper is not open source or it does not open in web automatically, the Band Gap value cannot be extracted. This tool is meant to have a quick and dirty literature search to monitor if the value is comparable to results observed previously.
 
 ## Installation
 
