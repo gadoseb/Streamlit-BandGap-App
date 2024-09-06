@@ -2,7 +2,7 @@
 
 This web application allows users to calculate the band gap of semiconductors using reflectance data via the Tauc plot method. The app is built with [Streamlit](https://streamlit.io/) and provides an interactive interface to upload data, visualize spectra, and perform band gap calculations.
 
-[App](https://app-tauc-plot-jcnkr6edgwkuumfqgk52qj.streamlit.app/)
+[Link to the App](https://app-tauc-plot-jcnkr6edgwkuumfqgk52qj.streamlit.app/)
 
 ## Features
 
@@ -59,6 +59,7 @@ The data exported in CSV and TXT formats include the following:
 - **Upload Data**: Upload a CSV file with columns for wavelength (in nm) and reflectance.
 - **Visualization**: The app will display reflectance, absorbance spectra, and Tauc plot.
 - **Calculation**: A linear fit will be performed in the selected region of the Tauc plot to estimate the band gap.
+- **Download**: Download CSV or TXT file of the calculated values
 
 ## Dependencies
 
