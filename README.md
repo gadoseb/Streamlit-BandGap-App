@@ -16,14 +16,76 @@ This web application allows users to calculate the band gap of semiconductors us
 1. Clone this repository:
    ```bash
    git clone https://github.com/yourusername/bandgap-calculation.git
-   cd bandgap-calculation```
+   cd bandgap-calculation
 2. Install the required dependencies using pip:
+   ```bash
+   pip install -r requirements.txt
+3. Run the Streamlit app:
+   ```bash
+   streamlit run bandgap.py
 
-bash
-Copy code
-pip install -r requirements.txt
-Run the Streamlit app:
+## Usage
 
-bash
-Copy code
-streamlit run app.py
+1. Launch the Streamlit app.
+2. Upload your reflectance data in CSV, XLSX, or TXT format.
+3. Select the columns representing wavelength and reflectance.
+4. Visualize the Reflectance and Absorbance spectra.
+5. Generate the Tauc Plot and select the range for the linear fit.
+6. The band gap energy is calculated and displayed on the screen.
+7. Export the results as CSV or TXT files.
+
+## File Formats
+
+The app supports the following file formats for data upload:
+
+- **CSV**: Comma-separated values.
+- **XLSX**: Microsoft Excel files.
+- **TXT**: Tab-delimited text files.
+
+## Exported Data
+
+The data exported in CSV and TXT formats include the following:
+
+- Photon Energy (eV)
+- Tauc Plot Values
+- Fitted Photon Energy (eV) for the linear fit
+- Fitted Tauc Plot Values for the linear fit
+- Estimated Band Gap (eV)
+
+## Example
+
+- **Upload Data**: Upload a CSV file with columns for wavelength (in nm) and reflectance.
+- **Visualization**: The app will display reflectance, absorbance spectra, and Tauc plot.
+- **Calculation**: A linear fit will be performed in the selected region of the Tauc plot to estimate the band gap.
+
+## Dependencies
+
+The following Python packages are required:
+
+- streamlit
+- pandas
+- numpy
+- matplotlib
+- scipy
+
+## How Tauc Plot works
+
+The Tauc plot is used to estimate the optical band gap energy of semiconductors. It is based on the following equation for direct transitions:
+
+$$
+(\alpha h \nu)^2 = A(h \nu - E_g)
+$$
+
+Where:
+- \( \alpha \) is the absorption coefficient (approximated using Kubelka-Munk function).
+- \( h \nu \) is the photon energy (in electron volts, eV).
+- \( E_g \) is the band gap energy.
+- \( A \) is a constant.
+
+For indirect transitions, the equation becomes:
+
+$$
+(\alpha h \nu)^{1/2} = A(h \nu - E_g)
+$$
+
+The linear region of the Tauc plot is used to extrapolate the band gap.
