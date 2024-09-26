@@ -424,13 +424,13 @@ def main():
 
         # Display the metrics
         st.header("Fit Quality Metrics:")
-        st.metric("R² Value", f"{best_metrics['R²']:.4f}")
-        st.metric("RMSE", f"{best_metrics['RMSE']:.4f}")
-        st.metric("MAE", f"{best_metrics['MAE']:.4f}")
+        st.write("R² Value", f"{best_metrics['R²']:.4f}")
+        st.write("RMSE", f"{best_metrics['RMSE']:.4f}")
+        st.write("MAE", f"{best_metrics['MAE']:.4f}")
         st.write(f"Residuals: {best_metrics['Residuals']}")
 
         # Display the estimated band gap
-        st.metric("Estimated Band Gap (eV)", f"{band_gap:.4f}")
+        st.metric("Estimated Band Gap (eV)", f"{band_gap:.2f}")
 
         # LITERATURE REVIEW
         
