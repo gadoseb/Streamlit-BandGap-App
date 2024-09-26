@@ -8,7 +8,7 @@ import requests
 import re
 from bs4 import BeautifulSoup
 
-def auto_detect_linear_region(photon_energy, y, window_size=200):
+def auto_detect_linear_region(photon_energy, y, window_size=100):
     best_fit = None
     best_r_squared = -np.inf  # Start with a very low R² value
 
