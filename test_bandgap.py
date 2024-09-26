@@ -404,7 +404,7 @@ def main():
         st.write("Automatically detecting linear region for fitting...")
 
         # Call the function to detect the linear region
-        best_fit, best_metrics = auto_detect_linear_region(photon_energy, y, min_y=2.5)
+        best_fit, best_metrics, band_gap = auto_detect_linear_region(photon_energy, y, min_y=2.5)
 
         if best_fit is None or best_metrics is None:
             st.write("No suitable linear region detected.")
