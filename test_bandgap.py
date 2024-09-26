@@ -206,7 +206,12 @@ def main():
                                    min_value=0, max_value=max_rows-1, value=0)
 
         # Slice the data from the selected starting row
-        data = data.iloc[starting_row:]
+        data = data.iloc[starting_row:].reset_index(drop=True)
+
+        if new_header_option:
+            # Set the first row as the new header
+            data.columns = data.iloc[0]  # Set new header
+            data = data[1:].reset_index(drop=True)  # Remove the new header row from data
 
         st.write(f"Data starting from row {starting_row}:")
         st.write(data.head())
