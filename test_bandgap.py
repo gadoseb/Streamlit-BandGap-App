@@ -238,6 +238,7 @@ def main():
         mode = st.selectbox("Select Data Mode", ["Reflectance", "Transmittance"])
 
         if mode == "Reflectance":
+            reflectance = signal
             # Apply Kubelka-Munk transformation for reflectance data
             alpha = kubelka_munk(signal)
             # Calculate absorbance using the inverse Kubelka-Munk function
@@ -316,7 +317,7 @@ def main():
         popt, _ = curve_fit(linear_fit, x_fit, y_fit)
 
         # Plot the linear fit
-        st.header("Linear Fit on the Selected Region:")
+        st.write("Linear Fit on the Selected Region:")
         fig, ax = plt.subplots()
         ax.plot(photon_energy, y, label=f'Tauc Plot ({transition_type})')
         ax.plot(x_fit, linear_fit(x_fit, *popt), 'r--', label='Linear Fit')
