@@ -234,14 +234,7 @@ def main():
         h = 4.135667696e-15  # Planck's constant in eV·s
         c = 3e8              # Speed of light in m/s
         photon_energy = (h * c) / (wavelength * 1e-9)  # Convert wavelength from nm to m
-        # Tauc plot (direct or indirect transition)
-        transition_type = st.selectbox("Select the type of electronic transition", ("Direct", "Indirect"))
-
-        if transition_type == "Direct":
-            y = (alpha * photon_energy)**2
-        else:
-            y = np.sqrt(alpha * photon_energy)
-
+        
         # Tauc plot (direct or indirect transition)
         transition_type = st.selectbox("Select the type of electronic transition", ("Direct", "Indirect"))
 
