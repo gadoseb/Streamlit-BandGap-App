@@ -402,30 +402,33 @@ def main():
         # Call the function to detect the linear region
         best_fit, best_metrics = auto_detect_linear_region(photon_energy, y, min_y=2.5)
 
-        if best_fit:
-            x_fit, y_fit, popt = best_fit
-            
-            # Perform the linear fit and extrapolate to find the band gap
-            band_gap = -popt[1] / popt[0]
-            st.write(f"Estimated Band Gap (automatically detected): {band_gap:.2f} eV")
-            # Display the metrics
-            st.write("### Fit Quality Metrics:")
-            st.write("R² Value", f"{best_metrics['R²']:.4f}")
-            st.write("RMSE", f"{best_metrics['RMSE']:.4f}")
-            st.write("MAE", f"{best_metrics['MAE']:.4f}")
-            st.write(f"Residuals: {best_metrics['Residuals']}")
+        if best_fit is None or best_metrics is None:
+            st.write("No suitable linear region detected.")
+            return
 
-            # Plot the Tauc plot with the automatically detected linear region
-            st.write("Tauc Plot with Automatically Detected Linear Fit:")
-            fig, ax = plt.subplots()
-            ax.plot(photon_energy, y, label=f'Tauc Plot ({transition_type})')
-            ax.plot(x_fit, linear_fit(x_fit, *popt), 'r--', label='Linear Fit (Auto)')
-            ax.set_xlabel('Photon Energy (eV)')
-            ax.set_ylabel(r'$(\alpha h\nu)^n$')
-            plt.legend()
-            st.pyplot(fig)
-        else:
-            st.error("Could not automatically detect a linear region for fitting.")
+        # Unpack the best fit values
+        x_fit, y_fit, popt = best_fit
+
+        # Plot the original data and the best linear fit
+        plt.figure(figsize=(10, 6))
+        plt.plot(photon_energy, y, label='Original Data', color='blue')
+        plt.plot(x_fit, linear_fit(x_fit, *popt), label='Best Linear Fit', color='red', linewidth=2)
+        plt.xlabel('Photon Energy (eV)')
+        plt.ylabel('y Values')
+        plt.title('Best Linear Fit Region')
+        plt.legend()
+
+        # Show the plot in Streamlit
+        st.pyplot(plt)
+
+        # Display the metrics
+        st.write("### Fit Quality Metrics:")
+        st.metric("R² Value", f"{best_metrics['R²']:.4f}")
+        st.metric("RMSE", f"{best_metrics['RMSE']:.4f}")
+        st.metric("MAE", f"{best_metrics['MAE']:.4f}")
+        st.write(f"Residuals: {best_metrics['Residuals']}")
+
+
 
         # LITERATURE REVIEW
         
