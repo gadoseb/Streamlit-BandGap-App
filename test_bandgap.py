@@ -245,7 +245,7 @@ def main():
             # Apply Kubelka-Munk transformation for reflectance data
             alpha = kubelka_munk(signal)
             # Calculate absorbance using the inverse Kubelka-Munk function
-            absorbance = ç
+            absorbance = inverse_kubelka_munk(alpha)
             transmittance = 1 - reflectance
             #st.write("Reflectance data detected. Applying Kubelka-Munk transformation.")
 
