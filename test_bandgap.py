@@ -212,24 +212,37 @@ def main():
         st.write(f"Data starting from row {starting_row}:")
         st.write(data.head())
 
-        # Let the user choose which columns to use for wavelength and reflectance
-        column1 = st.selectbox("Select Column 1 (Wavelength in nm):", data.columns)
-        column2 = st.selectbox("Select Column 2 (Reflectance):", data.columns)
+        # Let the user choose the mode of the data (Reflectance or Transmittance)
+        mode = st.selectbox("Select Data Mode", ["Reflectance", "Transmittance"])
 
         # Extract the selected columns
         wavelength = data[column1]
-        reflectance = data[column2]
+        signal = data[column2]  # This can be either reflectance or transmittance based on user selection
 
-        # Apply Kubelka-Munk transformation to reflectance data
-        alpha = kubelka_munk(reflectance)
+        if mode == "Reflectance":
+            # Apply Kubelka-Munk transformation for reflectance data
+            alpha = kubelka_munk(signal)
+            st.write("Reflectance data detected. Applying Kubelka-Munk transformation.")
 
-        # Calculate absorbance using the inverse Kubelka-Munk function
-        absorbance = inverse_kubelka_munk(alpha)
+        elif mode == "Transmittance":
+            # Apply transmittance to absorbance conversion
+            transmittance = signal / 100 if signal.max() > 1 else signal  # Convert to fraction if in %
+            absorbance = -np.log10(transmittance)  # A = -log(T)
+            alpha = absorbance  # Use absorbance directly as alpha for further steps
+            st.write("Transmittance data detected. Converting to absorbance using A = -log(T).")
 
         # Convert Wavelength to photon energy (hν in eV)
         h = 4.135667696e-15  # Planck's constant in eV·s
         c = 3e8              # Speed of light in m/s
         photon_energy = (h * c) / (wavelength * 1e-9)  # Convert wavelength from nm to m
+
+        # Tauc plot (direct or indirect transition)
+        transition_type = st.selectbox("Select the type of electronic transition", ("Direct", "Indirect"))
+
+        if transition_type == "Direct":
+            y = (alpha * photon_energy)**2
+        else:
+            y = np.sqrt(alpha * photon_energy)
 
         # Tauc plot (direct or indirect transition)
         transition_type = st.selectbox("Select the type of electronic transition", ("Direct", "Indirect"))
