@@ -269,34 +269,35 @@ def main():
 
         st.header("Plots")
         fig, axs = plt.subplots(2, 2, figsize=(10, 10))
+        axs = axs.flatten()
 
         # Plot Reflectance Spectrum
-        axs[0].set_title("Transmittance Spectrum:")
         axs[0].plot(wavelength, transmittance, label="Transmittance")
         axs[0].set_xlabel('Wavelength')
         axs[0].set_ylabel("Transmittance")
         axs[0].legend()
+        axs[0].set_title("Transmittance Spectrum:")
 
         # Plot Reflectance Spectrum
-        axs[1].set_title("Reflectance Spectrum:")
         axs[1].plot(wavelength, reflectance, label='Reflectance', color='black')
         axs[1].set_xlabel('Wavelength')
         axs[1].set_ylabel('Reflectance')
         axs[1].legend()
+        axs[1].set_title("Reflectance Spectrum:")
 
         # Plot Absorbance Spectrum
-        axs[2].set_title("Absorbance Spectrum:")
         axs[2].plot(wavelength, absorbance, label='Absorbance', color='orange')
         axs[2].set_xlabel('Wavelength')
         axs[2].set_ylabel('Absorbance')
         axs[2].legend()
+        axs[2].set_title("Absorbance Spectrum:")
 
         # Tauc Plot
-        axs[3].set_title("Tauc Plot:")
         axs[3].plot(photon_energy, y, label=f'Tauc Plot ({transition_type})')
         axs[3].set_xlabel('Photon Energy (eV)')
         axs[3].set_ylabel(r'$(\alpha h\nu)^n$')
         axs[3].legend()
+        axs[3].set_title("Tauc Plot:")
 
         plt.tight_layout()
         st.pyplot(fig)
