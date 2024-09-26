@@ -1,6 +1,6 @@
 # Band Gap Calculation using Tauc Plot
 
-This web application allows users to calculate the band gap of semiconductors using reflectance data via the Tauc plot method. The app is built with [Streamlit](https://streamlit.io/) and provides an interactive interface to upload data, visualize spectra, and perform band gap calculations.
+This web application allows users to calculate the band gap of semiconductors using reflectance data via the Tauc plot method. The app is built with [Streamlit](https://streamlit.io/) and provides an interactive interface to upload data, visualise spectra, and perform band gap calculations.
 
 [Link to the App](https://app-bandgap-app-sebastiano-gadolini.streamlit.app/)
 
@@ -15,7 +15,8 @@ This web application allows users to calculate the band gap of semiconductors us
 - **Tauc Plot**: Generate the Tauc plot for direct and indirect transitions.
 - **Band Gap Calculation**: Perform a linear fit on a selected range of the Tauc plot to calculate the band gap energy.
 - **Data Export**: Export the calculated data (Tauc plot values, linear fit results, and estimated band gap) to CSV file.
-- **Quick and Dirty Literature Reveiw (Beta Feature)**: Perform a literature review about the material under investigation. The band gap is shown only for open-source journals with a webpage view.
+- **Automatic Linear Region Detector [Beta]**: Estimate band gap automatically and display fit quality metrics.
+- **Quick and Dirty Literature Review [Beta]**: Perform a literature review about the material under investigation. The band gap is shown only for open-source journals with a webpage view.
 
 ## Installation
 
@@ -69,7 +70,7 @@ The data exported in CSV formats include the following:
 - **Visualization**: The app will display reflectance, absorbance spectra, and Tauc plot.
 - **Calculation**: A linear fit will be performed in the selected region of the Tauc plot to estimate the band gap.
 - **Download**: Download CSV file of the calculated values.
-- **Quick and Dirty Literature Review**: Perform a quick literature review on your material without changing webpage!
+- **Quick and Dirty Literature Review**: Perform a quick literature review on your material without changing the webpage!
 
 ## Dependencies
 
