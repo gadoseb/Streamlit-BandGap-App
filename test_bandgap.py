@@ -212,9 +212,6 @@ def main():
             # Set the first row as the new header
             data.columns = data.iloc[0]  # Set new header
             data = data[1:].reset_index(drop=True)  # Remove the new header row from data
-
-        st.write(f"Data starting from row {starting_row}:")
-        st.write(data.head())
                 
         # Let the user choose which columns to use for wavelength and reflectance
         column1 = st.selectbox("Select Column 1 (Wavelength in nm):", data.columns)
@@ -231,6 +228,9 @@ def main():
         # Convert columns to numeric, coercing errors (invalid strings become NaN)
         wavelength = pd.to_numeric(wavelength, errors='coerce')
         signal = pd.to_numeric(signal, errors='coerce')
+
+        st.write(f"Data starting from row {starting_row}:")
+        st.write(data.head())
 
         # Let the user choose the mode of the data (Reflectance or Transmittance)
         mode = st.selectbox("Select Data Mode", ["Reflectance", "Transmittance"])
