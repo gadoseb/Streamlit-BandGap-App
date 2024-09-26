@@ -200,6 +200,9 @@ def main():
         st.write("Data Preview:")
         st.write(data.head())
 
+        # Let the user choose which columns to use for wavelength and reflectance
+        column1 = st.selectbox("Select Column 1 (Wavelength in nm):", data.columns)
+        column2 = st.selectbox("Select Column 2 (Reflectance):", data.columns)
 
         # Let the user select the starting row for the calculation
         max_rows = len(data)
@@ -211,10 +214,6 @@ def main():
 
         st.write(f"Data starting from row {starting_row}:")
         st.write(data.head())
-
-        # Let the user choose which columns to use for wavelength and reflectance
-        column1 = st.selectbox("Select Column 1 (Wavelength in nm):", data.columns)
-        column2 = st.selectbox("Select Column 2 (Reflectance):", data.columns)
 
         # Let the user choose the mode of the data (Reflectance or Transmittance)
         mode = st.selectbox("Select Data Mode", ["Reflectance", "Transmittance"])
