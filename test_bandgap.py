@@ -265,12 +265,11 @@ def main():
         if transition_type == "Direct":
             y = (alpha * photon_energy)**2
         else:
-            y = np.sqrt(alpha * photon_energy)
-
-        fig, axs = plt.subplots(1, 4)
+            y = np.sqrt(alpha * photon_energy
 
         st.header("Plots")
-        
+        fig, axs = plt.subplots(2, 2, figsize=(10, 10))
+
         # Plot Reflectance Spectrum
         axs[0].set_title("Transmittance Spectrum:")
         axs[0].plot(wavelength, transmittance, label="Transmittance")
