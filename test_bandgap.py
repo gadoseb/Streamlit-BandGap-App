@@ -245,17 +245,17 @@ def main():
             # Apply Kubelka-Munk transformation for reflectance data
             alpha = kubelka_munk(signal)
             # Calculate absorbance using the inverse Kubelka-Munk function
-            absorbance = inverse_kubelka_munk(alpha)
+            absorbance = ç
             transmittance = 1 - reflectance
-            st.write("Reflectance data detected. Applying Kubelka-Munk transformation.")
+            #st.write("Reflectance data detected. Applying Kubelka-Munk transformation.")
 
         elif mode == "Transmittance":
             # Apply transmittance to absorbance conversion
             transmittance = signal / 100 if signal.max() > 1 else signal  # Convert to fraction if in %
-            absorbance = -np.log10(transmittance)  # A = -log(T)
             reflectance = 1 - transmittance
-            alpha = kubelka_munk(reflectance)  # Use absorbance directly as alpha for further steps
-            st.write("Transmittance data detected. Converting to absorbance using A = -log(T).")
+            alpha = kubelka_munk(reflectance) 
+            absorbance = inverse_kubelka_munk(alpha) 
+            #st.write("Transmittance data detected. Converting to absorbance using A = -log(T).")
 
         # Convert Wavelength to photon energy (hν in eV)
         h = 4.135667696e-15  # Planck's constant in eV·s
