@@ -245,7 +245,7 @@ def main():
             y = np.sqrt(alpha * photon_energy)
 
         # Plot Reflectance Spectrum
-        st.write("Original " mode " Spectrum:")
+        st.write("Original ", mode, " Spectrum:")
         fig, ax = plt.subplots()
         ax.plot(wavelength, signal, label=mode)
         ax.set_xlabel('Wavelength')
