@@ -217,15 +217,18 @@ def main():
         selected_range = st.slider("Select Wavelength Range (nm):", min_value=min_wavelength, max_value=max_wavelength, value=(min_wavelength, max_wavelength))
 
         # Filter the data based on the selected range
-        data_cleaned = data_cleaned[(data_cleaned[column1] >= selected_range[0]) & (data_cleaned[column1] <= selected_range[1])]
+        data_filtered = data_cleaned[(data_cleaned[column1] >= selected_range[0]) & (data_cleaned[column1] <= selected_range[1])]
 
-        if data_cleaned.empty:
+        if data_filtered.empty:
             st.error("No data available in the selected wavelength range.")
             return
 
         # Display cleaned data with headers
         st.write("Cleaned Data Preview:")
-        st.write(data_cleaned.head())
+        st.write(data_filtered.head())
+
+        wavelength = data_filtered[column1]
+        signal = data_filtered[column2]
 
         # Let the user choose the mode of the data (Reflectance or Transmittance)
         mode = st.selectbox("Select Data Mode", ["Reflectance", "Transmittance"])
@@ -235,6 +238,7 @@ def main():
             alpha = kubelka_munk(signal)
             # Calculate absorbance using the inverse Kubelka-Munk function
             absorbance = inverse_kubelka_munk(alpha)
+            transmittance = 1 - reflectance
             st.write("Reflectance data detected. Applying Kubelka-Munk transformation.")
 
         elif mode == "Transmittance":
@@ -259,11 +263,20 @@ def main():
             y = np.sqrt(alpha * photon_energy)
 
         # Plot Reflectance Spectrum
-        st.write("Original ", mode, " Spectrum:")
+        st.write("Transmittance Spectrum:")
         fig, ax = plt.subplots()
-        ax.plot(wavelength, signal, label=mode)
+        ax.plot(wavelength, transmittance, label=mode)
         ax.set_xlabel('Wavelength')
-        ax.set_ylabel(mode)
+        ax.set_ylabel("Transmittance")
+        plt.legend()
+        st.pyplot(fig)
+
+        # Plot Reflectance Spectrum
+        st.write("Reflectance Spectrum:")
+        fig, ax = plt.subplots()
+        ax.plot(wavelength, reflectance, label='Reflectance', color='orange')
+        ax.set_xlabel('Wavelength')
+        ax.set_ylabel('Reflectance')
         plt.legend()
         st.pyplot(fig)
 
@@ -314,7 +327,7 @@ def main():
 
         # Prepare data for export
         csv_data = export_to_csv(photon_energy, y, x_fit, y_fit, band_gap)
-        txt_data = export_to_txt(photon_energy, y, x_fit, y_fit, band_gap)
+        txt_data = export_to_txt(wavelength, reflectance, absorbance, transmittance, photon_energy, y, x_fit, y_fit, band_gap)
 
         # Provide download links
         st.download_button(
