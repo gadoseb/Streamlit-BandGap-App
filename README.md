@@ -2,14 +2,17 @@
 
 This web application allows users to calculate the band gap of semiconductors using reflectance data via the Tauc plot method. The app is built with [Streamlit](https://streamlit.io/) and provides an interactive interface to upload data, visualize spectra, and perform band gap calculations.
 
-[Link to the App](https://app-tauc-plot-jcnkr6edgwkuumfqgk52qj.streamlit.app/)
+[Link to the App](https://app-bandgap-app-sebastiano-gadolini.streamlit.app/)
 
 ## Features
 
 - **Data Upload**: Upload reflectance data in CSV, XLSX, or TXT format.
-- **Reflectance Spectrum**: Visualize the reflectance spectrum of the uploaded data.
+- **Experiement Selection**: Transmittance or Reflectance data. Direct or Indirect Band Gap calculation
+- **Wavelength Range Slider**: Select the wavelength range for calculations and plots.
+- **Transmittance Spectrum**: Visualize or calculate the transmittance spectrum of the uploaded data.
+- **Reflectance Spectrum**: Visualize or calculate the reflectance spectrum of the uploaded data.
 - **Absorbance Spectrum**: Calculate and display the absorbance spectrum using the inverse Kubelka-Munk transformation.
-- **Tauc Plot**: Generate the Tauc plot for both direct and indirect transitions.
+- **Tauc Plot**: Generate the Tauc plot for direct and indirect transitions.
 - **Band Gap Calculation**: Perform a linear fit on a selected range of the Tauc plot to calculate the band gap energy.
 - **Data Export**: Export the calculated data (Tauc plot values, linear fit results, and estimated band gap) to CSV and TXT files.
 
@@ -29,12 +32,13 @@ This web application allows users to calculate the band gap of semiconductors us
 ## Usage
 
 1. Launch the Streamlit app.
-2. Upload your reflectance data in CSV, XLSX, or TXT format.
-3. Select the columns representing wavelength and reflectance.
-4. Visualize the Reflectance and Absorbance spectra.
-5. Generate the Tauc Plot and select the range for the linear fit.
-6. The band gap energy is calculated and displayed on the screen.
-7. Export the results as CSV or TXT files.
+2. Upload your data in CSV, XLSX, or TXT format.
+4. Select the columns representing wavelength and signal.
+5. Select the data range to be used.
+6. Visualize the spectra.
+7. Generate the Tauc Plot and select the range for the linear fit.
+8. The band gap energy is calculated and displayed on the screen.
+9. Export the results as CSV.
 
 ## File Formats
 
@@ -46,8 +50,12 @@ The app supports the following file formats for data upload:
 
 ## Exported Data
 
-The data exported in CSV and TXT formats include the following:
+The data exported in CSV formats include the following:
 
+- Wavelength (nm)
+- Reflectance
+- Absorbance
+- Transmittance
 - Photon Energy (eV)
 - Tauc Plot Values
 - Fitted Photon Energy (eV) for the linear fit
@@ -59,17 +67,21 @@ The data exported in CSV and TXT formats include the following:
 - **Upload Data**: Upload a CSV file with columns for wavelength (in nm) and reflectance.
 - **Visualization**: The app will display reflectance, absorbance spectra, and Tauc plot.
 - **Calculation**: A linear fit will be performed in the selected region of the Tauc plot to estimate the band gap.
-- **Download**: Download CSV or TXT file of the calculated values
+- **Download**: Download CSV file of the calculated values.
+- **Quick and Dirty Literature Review**: Perform a quick literature review on your material without changing webpage!
 
 ## Dependencies
 
 The following Python packages are required:
 
-- streamlit
-- pandas
-- numpy
-- matplotlib
-- scipy
+- streamlit==1.38.0
+- pandas>=1.3.0
+- numpy>=1.21.0
+- matplotlib>=3.4.0
+- scipy>=1.7.0
+- requests>=2.26.0
+- beautifulsoup4>=4.10.0
+- openpyxl
 
 ## How Tauc Plot works
 
