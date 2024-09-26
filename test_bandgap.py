@@ -211,6 +211,18 @@ def main():
         wavelength = pd.to_numeric(data_cleaned[column1].astype(str).str.replace(',', ''), errors='coerce')
         signal = pd.to_numeric(data_cleaned[column2].astype(str).str.replace(',', ''), errors='coerce')
 
+        # Add sliders for wavelength range selection
+        min_wavelength = float(wavelength.min())
+        max_wavelength = float(wavelength.max())
+        selected_range = st.slider("Select Wavelength Range (nm):", min_value=min_wavelength, max_value=max_wavelength, value=(min_wavelength, max_wavelength))
+
+        # Filter the data based on the selected range
+        data_cleaned = data_cleaned[(data_cleaned[column1] >= selected_range[0]) & (data_cleaned[column1] <= selected_range[1])]
+
+        if filtered_data.empty:
+            st.error("No data available in the selected wavelength range.")
+            return
+
         # Display cleaned data with headers
         st.write("Cleaned Data Preview:")
         st.write(data_cleaned.head())
