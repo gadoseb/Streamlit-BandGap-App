@@ -199,7 +199,6 @@ def main():
 
         st.write("Data Preview:")
         st.write(data.head())
-
         # Let the user select the starting row for the calculation
         max_rows = len(data)
         starting_row = st.number_input("Select the starting row for calculation (0-based index):", 
