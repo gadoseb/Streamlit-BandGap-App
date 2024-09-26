@@ -219,7 +219,7 @@ def main():
         # Filter the data based on the selected range
         data_cleaned = data_cleaned[(data_cleaned[column1] >= selected_range[0]) & (data_cleaned[column1] <= selected_range[1])]
 
-        if filtered_data.empty:
+        if data_cleaned.empty:
             st.error("No data available in the selected wavelength range.")
             return
 
