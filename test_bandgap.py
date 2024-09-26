@@ -12,6 +12,7 @@ def auto_detect_linear_region(photon_energy, y, window_size=10, min_y=None):
     best_fit = None
     best_r_squared = -np.inf  # Start with a very low R² value
     best_metrics = None       # Store the best fit quality metrics
+    band_gap = None
 
     for i in range(len(photon_energy) - window_size):
         # Select a window of data for fitting
@@ -34,10 +35,13 @@ def auto_detect_linear_region(photon_energy, y, window_size=10, min_y=None):
         rmse = np.sqrt(np.mean(residuals**2))
         mae = np.mean(np.abs(residuals))
 
+        band_gap_energy = popt[1]
+
         # Track the best fitting region with the highest R² value
         if r_squared > best_r_squared:
             best_r_squared = r_squared
             best_fit = (x_fit, y_fit, popt)
+            band_gap = band_gap_energy
             # Store the best metrics
             best_metrics = {
                 'R²': r_squared,
@@ -47,7 +51,7 @@ def auto_detect_linear_region(photon_energy, y, window_size=10, min_y=None):
             }
 
     # Return the best fit and associated metrics
-    return best_fit, best_metrics
+    return best_fit, best_metrics, band_gap
 
 # Define the Tauc plot fitting function (for linear region)
 def linear_fit(x, m, c):
@@ -419,11 +423,14 @@ def main():
         st.pyplot(fig)
 
         # Display the metrics
-        st.write("#### Fit Quality Metrics:")
-        st.metric("R² Value", f"{best_metrics['R²']}")
-        st.metric("RMSE", f"{best_metrics['RMSE']}")
-        st.metric("MAE", f"{best_metrics['MAE']}")
+        st.header("Fit Quality Metrics:")
+        st.metric("R² Value", f"{best_metrics['R²']:.4f}")
+        st.metric("RMSE", f"{best_metrics['RMSE']:.4f}")
+        st.metric("MAE", f"{best_metrics['MAE']:.4f}")
         st.write(f"Residuals: {best_metrics['Residuals']}")
+
+        # Display the estimated band gap
+        st.metric("Estimated Band Gap (eV)", f"{band_gap:.4f}")
 
         # LITERATURE REVIEW
         
