@@ -8,7 +8,7 @@ import requests
 import re
 from bs4 import BeautifulSoup
 
-def auto_detect_linear_region(photon_energy, y, window_size=100):
+def auto_detect_linear_region(photon_energy, y, window_size=100, min_y=None):
     best_fit = None
     best_r_squared = -np.inf  # Start with a very low R² value
 
@@ -17,19 +17,21 @@ def auto_detect_linear_region(photon_energy, y, window_size=100):
         x_fit = photon_energy[i:i + window_size]
         y_fit = y[i:i + window_size]
 
-        # Check if the slope is positive (i.e., the data is increasing)
-        if all(np.diff(y_fit) > 0):  # Ensure the slope is positive across the window
-            # Perform linear fit
-            popt, _ = curve_fit(linear_fit, x_fit, y_fit)
-            residuals = y_fit - linear_fit(x_fit, *popt)
-            ss_res = np.sum(residuals**2)
-            ss_tot = np.sum((y_fit - np.mean(y_fit))**2)
-            r_squared = 1 - (ss_res / ss_tot)
+        # If a minimum y value is set, check if the window's y values meet the requirement
+        if min_y is not None and np.any(y_fit < min_y):
+            continue  # Skip this window if any y value is below the threshold
 
-            # Track the best fitting region with the highest R² value
-            if r_squared > best_r_squared:
-                best_r_squared = r_squared
-                best_fit = (x_fit, y_fit, popt)
+        # Perform linear fit
+        popt, _ = curve_fit(linear_fit, x_fit, y_fit)
+        residuals = y_fit - linear_fit(x_fit, *popt)
+        ss_res = np.sum(residuals**2)
+        ss_tot = np.sum((y_fit - np.mean(y_fit))**2)
+        r_squared = 1 - (ss_res / ss_tot)
+
+        # Track the best fitting region with the highest R² value
+        if r_squared > best_r_squared:
+            best_r_squared = r_squared
+            best_fit = (x_fit, y_fit, popt)
 
     return best_fit
 
@@ -364,7 +366,7 @@ def main():
         st.write("Automatically detecting linear region for fitting...")
 
         # Call the function to detect the linear region
-        best_fit = auto_detect_linear_region(photon_energy, y)
+        best_fit = auto_detect_linear_region(photon_energy, y, min_y=2.5)
 
         if best_fit:
             x_fit, y_fit, popt = best_fit
