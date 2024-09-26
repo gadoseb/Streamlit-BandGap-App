@@ -35,7 +35,7 @@ def auto_detect_linear_region(photon_energy, y, window_size=10, min_y=None):
         rmse = np.sqrt(np.mean(residuals**2))
         mae = np.mean(np.abs(residuals))
 
-        band_gap_energy = popt[1]
+        band_gap_energy = -popt[1] / popt[0]
 
         # Track the best fitting region with the highest R² value
         if r_squared > best_r_squared:
