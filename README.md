@@ -18,18 +18,9 @@ This web application allows users to calculate the band gap of semiconductors us
 - **Automatic Linear Region Detector [Beta]**: Estimate band gap automatically and display fit quality metrics.
 - **Quick and Dirty Literature Review [Beta]**: Perform a literature review about the material under investigation. The band gap is shown only for open-source journals with a webpage view.
 
-## Installation
+## Demo
 
-1. Clone this repository:
-   ```bash
-   git clone https://github.com/yourusername/bandgap-calculation.git
-   cd bandgap-calculation
-2. Install the required dependencies using pip:
-   ```bash
-   pip install -r requirements.txt
-3. Run the Streamlit app:
-   ```bash
-   streamlit run bandgap.py
+https://github.com/user-attachments/assets/78809a60-4fe8-4ff5-beb9-fbbc0c6cd6ae
 
 ## Usage
 
@@ -106,3 +97,16 @@ $$
 $$
 
 The linear region of the Tauc plot is used to extrapolate the band gap.
+
+## Installation
+
+1. Clone this repository:
+   ```bash
+   git clone https://github.com/yourusername/bandgap-calculation.git
+   cd bandgap-calculation
+2. Install the required dependencies using pip:
+   ```bash
+   pip install -r requirements.txt
+3. Run the Streamlit app:
+   ```bash
+   streamlit run bandgap.py
