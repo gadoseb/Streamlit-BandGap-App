@@ -207,11 +207,6 @@ def main():
 
         # Slice the data from the selected starting row
         data = data.iloc[starting_row:].reset_index(drop=True)
-
-        if new_header_option:
-            # Set the first row as the new header
-            data.columns = data.iloc[0]  # Set new header
-            data = data[1:].reset_index(drop=True)  # Remove the new header row from data
                 
         # Let the user choose which columns to use for wavelength and reflectance
         column1 = st.selectbox("Select Column 1 (Wavelength in nm):", data.columns)
@@ -220,10 +215,6 @@ def main():
         # Extract the selected columns
         wavelength = data[column1]
         signal = data[column2]  # This can be either reflectance or transmittance based on user selection
-        
-        # Remove commas and convert to numeric (force conversion and handle non-numeric values)
-        wavelength = wavelength.replace(',', '', regex=True).astype(str)
-        signal = signal.replace(',', '', regex=True).astype(str)
 
         # Convert columns to numeric, coercing errors (invalid strings become NaN)
         wavelength = pd.to_numeric(wavelength, errors='coerce')
