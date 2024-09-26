@@ -308,7 +308,7 @@ def main():
         st.pyplot(fig)
 
         # Linear region selection
-        st.header("Linear Regin Fitting")
+        st.header("Linear Region Fitting")
         st.write("Select the energy range for the linear region fitting:")
         x_min = st.number_input("Minimum energy (eV):", min_value=float(photon_energy.min()), max_value=float(photon_energy.max()), value=float(photon_energy.min()))
         x_max = st.number_input("Maximum energy (eV):", min_value=float(photon_energy.min()), max_value=float(photon_energy.max()), value=float(photon_energy.max()))
