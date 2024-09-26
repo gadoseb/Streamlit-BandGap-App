@@ -276,7 +276,7 @@ def main():
         st.pyplot(fig)
 
         # Plot Reflectance Spectrum
-        st.subheade("Reflectance Spectrum:")
+        st.subheader("Reflectance Spectrum:")
         fig, ax = plt.subplots()
         ax.plot(wavelength, reflectance, label='Reflectance', color='black')
         ax.set_xlabel('Wavelength')
