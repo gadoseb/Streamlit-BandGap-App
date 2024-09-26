@@ -227,7 +227,8 @@ def main():
             # Apply transmittance to absorbance conversion
             transmittance = signal / 100 if signal.max() > 1 else signal  # Convert to fraction if in %
             absorbance = -np.log10(transmittance)  # A = -log(T)
-            alpha = absorbance  # Use absorbance directly as alpha for further steps
+            reflectance = 1 - transmittance
+            alpha = kubelka_munk(reflectance)  # Use absorbance directly as alpha for further steps
             st.write("Transmittance data detected. Converting to absorbance using A = -log(T).")
 
         # Convert Wavelength to photon energy (hν in eV)
@@ -244,11 +245,11 @@ def main():
             y = np.sqrt(alpha * photon_energy)
 
         # Plot Reflectance Spectrum
-        st.write("Reflectance Spectrum:")
+        st.write("Original " mode " Spectrum:")
         fig, ax = plt.subplots()
         ax.plot(wavelength, signal, label=mode)
         ax.set_xlabel('Wavelength')
-        ax.set_ylabel('Reflectance')
+        ax.set_ylabel(mode)
         plt.legend()
         st.pyplot(fig)
 
