@@ -199,7 +199,23 @@ def main():
 
         st.write("Data Preview:")
         st.write(data.head())
-        
+
+        # Let the user select the starting row for the calculation
+        max_rows = len(data)
+        starting_row = st.number_input("Select the starting row for calculation (0-based index):", 
+                                   min_value=0, max_value=max_rows-1, value=0)
+
+        # Slice the data from the selected starting row
+        data = data.iloc[starting_row:].reset_index(drop=True)
+
+        if new_header_option:
+            # Set the first row as the new header
+            data.columns = data.iloc[0]  # Set new header
+            data = data[1:].reset_index(drop=True)  # Remove the new header row from data
+
+        st.write(f"Data starting from row {starting_row}:")
+        st.write(data.head())
+                
         # Let the user choose which columns to use for wavelength and reflectance
         column1 = st.selectbox("Select Column 1 (Wavelength in nm):", data.columns)
         column2 = st.selectbox("Select Column 2 (Reflectance):", data.columns)
@@ -219,22 +235,6 @@ def main():
         if data_clean.empty:
             st.error("No valid numeric data found in the selected columns.")
             st.stop()
-
-        # Let the user select the starting row for the calculation
-        max_rows = len(data)
-        starting_row = st.number_input("Select the starting row for calculation (0-based index):", 
-                                   min_value=0, max_value=max_rows-1, value=0)
-
-        # Slice the data from the selected starting row
-        data = data.iloc[starting_row:].reset_index(drop=True)
-
-        if new_header_option:
-            # Set the first row as the new header
-            data.columns = data.iloc[0]  # Set new header
-            data = data[1:].reset_index(drop=True)  # Remove the new header row from data
-
-        st.write(f"Data starting from row {starting_row}:")
-        st.write(data.head())
 
         # Let the user choose the mode of the data (Reflectance or Transmittance)
         mode = st.selectbox("Select Data Mode", ["Reflectance", "Transmittance"])
