@@ -412,7 +412,7 @@ def main():
         # Plot the original data and the best linear fit
         fig, ax = plt.subplots()
         ax.plot(photon_energy, y, label=f'Tauc Plot')
-        ax.plot(x_fit, linear_fit(x_fit, *popt), label='Best Linear Fit', label='Linear Fit')
+        ax.plot(x_fit, linear_fit(x_fit, *popt), label='Best Linear Fit')
         ax.set_xlabel('Photon Energy (eV)')
         ax.set_ylabel(r'$(\alpha h\nu)^n$')
         plt.legend()
