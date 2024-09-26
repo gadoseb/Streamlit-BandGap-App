@@ -200,22 +200,21 @@ def main():
         st.write("Data Preview:")
         st.write(data.head())
 
+        # Clean the data to keep only rows with valid numerical values
+        data_cleaned = data.apply(pd.to_numeric, errors='coerce').dropna()
+
+        # Check if cleaned data is empty
+        if data_cleaned.empty:
+            st.error("No valid numerical data available for calculations.")
+            return
+
         # Let the user choose which columns to use for wavelength and signal (reflectance/transmittance)
-        column1 = st.selectbox("Select Column 1 (Wavelength in nm):", data.columns)
-        column2 = st.selectbox("Select Column 2 (Reflectance or Transmittance):", data.columns)
+        column1 = st.selectbox("Select Column 1 (Wavelength in nm):", data_cleaned.columns)
+        column2 = st.selectbox("Select Column 2 (Reflectance or Transmittance):", data_cleaned.columns)
 
         # Clean the selected columns to keep only rows with numerical data
-        wavelength = pd.to_numeric(data[column1].astype(str).str.replace(',', ''), errors='coerce')
-        signal = pd.to_numeric(data[column2].astype(str).str.replace(',', ''), errors='coerce')
-
-        # Create a new DataFrame to hold cleaned data and drop rows with NaN values
-        data_clean = pd.DataFrame({
-            'Wavelength (nm)': wavelength,
-            'Signal': signal
-        })
-
-        # Drop rows where either 'Wavelength' or 'Signal' is NaN (non-numeric)
-        data_clean = data_clean.dropna(subset=['Wavelength (nm)', 'Signal'])
+        wavelength = pd.to_numeric(data_cleaned[column1].astype(str).str.replace(',', ''), errors='coerce')
+        signal = pd.to_numeric(data_cleaned[column2].astype(str).str.replace(',', ''), errors='coerce')
 
         # Display cleaned data with headers
         st.write("Cleaned Data Preview:")
