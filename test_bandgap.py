@@ -213,7 +213,7 @@ def main():
 
         # Display cleaned data with headers
         st.write("Cleaned Data Preview:")
-        st.write(data_clean.head())
+        st.write(data_cleaned.head())
 
         # Let the user choose the mode of the data (Reflectance or Transmittance)
         mode = st.selectbox("Select Data Mode", ["Reflectance", "Transmittance"])
