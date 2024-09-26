@@ -224,17 +224,13 @@ def main():
         wavelength = data[column1]
         signal = data[column2]  # This can be either reflectance or transmittance based on user selection
         
-        # Convert the columns to numeric, and coerce any non-numeric values to NaN
+        # Remove commas and convert to numeric (force conversion and handle non-numeric values)
+        wavelength = wavelength.replace(',', '', regex=True).astype(str)
+        signal = signal.replace(',', '', regex=True).astype(str)
+
+        # Convert columns to numeric, coercing errors (invalid strings become NaN)
         wavelength = pd.to_numeric(wavelength, errors='coerce')
         signal = pd.to_numeric(signal, errors='coerce')
-
-        # Drop rows where either wavelength or signal is NaN (i.e., invalid data)
-        data_clean = pd.DataFrame({'wavelength': wavelength, 'signal': signal}).dropna()
-
-        # Check if there's any valid data left
-        if data_clean.empty:
-            st.error("No valid numeric data found in the selected columns.")
-            st.stop()
 
         # Let the user choose the mode of the data (Reflectance or Transmittance)
         mode = st.selectbox("Select Data Mode", ["Reflectance", "Transmittance"])
