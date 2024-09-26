@@ -182,10 +182,11 @@ def compare_band_gap(user_band_gap, extracted_band_gap):
 def main():
     st.title("Band Gap Calculation")
 
-    st.write("""
-    This app allows you to upload reflectance data, calculate the band gap of a semiconductor using the Tauc plot method, 
-    and compare it with literature values.
-    """)
+    st.write("""This Streamlit app allows users to upload reflectance or transmittance data in CSV, XLSX, or TXT formats, 
+        and calculates the band gap of a semiconductor using the Kubelka-Munk function and Tauc plot method. 
+        Users can select wavelength ranges, plot data, and perform linear fitting to estimate the band gap value. 
+        Additionally, the app provides a literature review feature to search for band gap values from research articles.
+        """)
 
     # File upload
     uploaded_file = st.file_uploader("Upload your data (CSV, XLSX, or TXT format)", type=["csv", "xlsx", "txt"])
@@ -203,6 +204,8 @@ def main():
 
         st.write("Data Preview:")
         st.write(data.head())
+
+        # DATA MANIPULATION
 
         # Clean the data to keep only rows with valid numerical values
         data_cleaned = data.apply(pd.to_numeric, errors='coerce').dropna()
@@ -228,8 +231,8 @@ def main():
             return
 
         # Display cleaned data with headers
-        st.write("Cleaned Data Preview:")
-        st.write(data_filtered.head())
+        #st.write("Cleaned Data Preview:")
+        #st.write(data_filtered.head())
 
         wavelength = data_filtered[column1]
         signal = data_filtered[column2]
@@ -267,6 +270,8 @@ def main():
         else:
             y = np.sqrt(alpha * photon_energy)
 
+        # DATA VISUALISATION
+
         st.header("Plots")
         fig, axs = plt.subplots(2, 2, figsize=(10, 10))
         axs = axs.flatten()
@@ -303,7 +308,8 @@ def main():
         st.pyplot(fig)
 
         # Linear region selection
-        st.header("Select the energy range for the linear region fitting:")
+        st.header("Linear Regin Fitting")
+        st.write("Select the energy range for the linear region fitting:")
         x_min = st.number_input("Minimum energy (eV):", min_value=float(photon_energy.min()), max_value=float(photon_energy.max()), value=float(photon_energy.min()))
         x_max = st.number_input("Maximum energy (eV):", min_value=float(photon_energy.min()), max_value=float(photon_energy.max()), value=float(photon_energy.max()))
 
@@ -348,6 +354,8 @@ def main():
             #mime="text/plain"
         #)
 
+        # LITERATURE REVIEW
+        
         # Add literature benchmark feature
         st.title("Quick and Dirty Literature Review")
         st.write("Beta feature, the band gap values are shown only for opensource journals with webpage view, otherwise the user should open the DOI.")
