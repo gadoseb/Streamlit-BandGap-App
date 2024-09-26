@@ -176,7 +176,7 @@ def compare_band_gap(user_band_gap, extracted_band_gap):
 
 # Streamlit app starts here
 def main():
-    st.title("Band Gap Calculation and Literature Comparison")
+    st.title("Band Gap Calculation")
 
     st.write("""
     This app allows you to upload reflectance data, calculate the band gap of a semiconductor using the Tauc plot method, 
