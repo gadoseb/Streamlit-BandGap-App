@@ -8,7 +8,7 @@ import requests
 import re
 from bs4 import BeautifulSoup
 
-def auto_detect_linear_region(photon_energy, y, window_size=10):
+def auto_detect_linear_region(photon_energy, y, window_size=100):
     best_fit = None
     best_r_squared = -np.inf  # Start with a very low R² value
 
@@ -17,17 +17,19 @@ def auto_detect_linear_region(photon_energy, y, window_size=10):
         x_fit = photon_energy[i:i + window_size]
         y_fit = y[i:i + window_size]
 
-        # Perform linear fit
-        popt, _ = curve_fit(linear_fit, x_fit, y_fit)
-        residuals = y_fit - linear_fit(x_fit, *popt)
-        ss_res = np.sum(residuals**2)
-        ss_tot = np.sum((y_fit - np.mean(y_fit))**2)
-        r_squared = 1 - (ss_res / ss_tot)
+        # Check if the slope is positive (i.e., the data is increasing)
+        if all(np.diff(y_fit) > 0):  # Ensure the slope is positive across the window
+            # Perform linear fit
+            popt, _ = curve_fit(linear_fit, x_fit, y_fit)
+            residuals = y_fit - linear_fit(x_fit, *popt)
+            ss_res = np.sum(residuals**2)
+            ss_tot = np.sum((y_fit - np.mean(y_fit))**2)
+            r_squared = 1 - (ss_res / ss_tot)
 
-        # Track the best fitting region with the highest R² value
-        if r_squared > best_r_squared:
-            best_r_squared = r_squared
-            best_fit = (x_fit, y_fit, popt)
+            # Track the best fitting region with the highest R² value
+            if r_squared > best_r_squared:
+                best_r_squared = r_squared
+                best_fit = (x_fit, y_fit, popt)
 
     return best_fit
 
