@@ -401,7 +401,7 @@ def main():
 
         # Automatically detect linear region for fitting
         st.title("Automatic Linear Region Detector [Beta]")
-        st.write("Automatically detecting linear region for fitting...")
+        st.write("This beta feature detects the most linear region for the user and gives an estimation of the band gap based on the best linear fitting.")
 
         # Call the function to detect the linear region
         best_fit, best_metrics, band_gap = auto_detect_linear_region(photon_energy, y, min_y=2.5)
@@ -422,15 +422,15 @@ def main():
         plt.legend()
         st.pyplot(fig)
 
-        # Display the metrics
-        st.header("Fit Quality Metrics:")
-        st.write("R² Value", f"{best_metrics['R²']:.4f}")
-        st.write("RMSE", f"{best_metrics['RMSE']:.4f}")
-        st.write("MAE", f"{best_metrics['MAE']:.4f}")
-        st.write(f"Residuals: {best_metrics['Residuals']}")
-
         # Display the estimated band gap
         st.metric("Estimated Band Gap (eV)", f"{band_gap:.2f}")
+
+        # Display the metrics
+        st.header("Fit Quality Metrics:")
+        st.write(f"R² Value: {best_metrics['R²']:.4f}")
+        st.write(f"RMSE: {best_metrics['RMSE']:.4f}")
+        st.write(F"MAE: {best_metrics['MAE']:.4f}")
+        st.write(f"Residuals: {best_metrics['Residuals']}")
 
         # LITERATURE REVIEW
         
