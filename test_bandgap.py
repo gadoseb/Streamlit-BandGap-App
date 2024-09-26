@@ -200,28 +200,33 @@ def main():
         st.write("Data Preview:")
         st.write(data.head())
 
-        # Let the user select the starting row for the calculation
-        max_rows = len(data)
-        starting_row = st.number_input("Select the starting row for calculation (0-based index):", 
-                                   min_value=0, max_value=max_rows-1, value=0)
-
-        # Slice the data from the selected starting row
-        data = data.iloc[starting_row:].reset_index(drop=True)
-                
-        # Let the user choose which columns to use for wavelength and reflectance
+        # Let the user choose which columns to use for wavelength and signal (reflectance/transmittance)
         column1 = st.selectbox("Select Column 1 (Wavelength in nm):", data.columns)
-        column2 = st.selectbox("Select Column 2 (Reflectance):", data.columns)
+        column2 = st.selectbox("Select Column 2 (Reflectance or Transmittance):", data.columns)
 
-        # Extract the selected columns
-        wavelength = data[column1]
-        signal = data[column2]  # This can be either reflectance or transmittance based on user selection
+        # Clean the selected columns to keep only rows with numerical data
+        wavelength = pd.to_numeric(data[column1].astype(str).str.replace(',', ''), errors='coerce')
+        signal = pd.to_numeric(data[column2].astype(str).str.replace(',', ''), errors='coerce')
 
-        # Convert columns to numeric, coercing errors (invalid strings become NaN)
-        wavelength = pd.to_numeric(wavelength, errors='coerce')
-        signal = pd.to_numeric(signal, errors='coerce')
+        # Create a new DataFrame to hold cleaned data and drop rows with NaN values
+        data_clean = pd.DataFrame({
+            'Wavelength (nm)': wavelength,
+            'Signal': signal
+        })
 
-        st.write(f"Data starting from row {starting_row}:")
-        st.write(data.head())
+        # Drop rows where either 'Wavelength' or 'Signal' is NaN (non-numeric)
+        data_clean = data_clean.dropna(subset=['Wavelength (nm)', 'Signal'])
+
+        # Display cleaned data with headers
+        st.write("Cleaned Data Preview:")
+        st.write(data_clean.head())
+
+        # Check if the cleaned data is empty before proceeding
+        if data_clean.empty:
+            st.error("No valid numerical data available for calculations.")
+        else:
+            # Proceed with calculations using data_clean['Wavelength (nm)'] and data_clean['Signal']
+            st.write("Proceeding with calculations on the cleaned data...")
 
         # Let the user choose the mode of the data (Reflectance or Transmittance)
         mode = st.selectbox("Select Data Mode", ["Reflectance", "Transmittance"])
