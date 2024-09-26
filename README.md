@@ -14,7 +14,8 @@ This web application allows users to calculate the band gap of semiconductors us
 - **Absorbance Spectrum**: Calculate and display the absorbance spectrum using the inverse Kubelka-Munk transformation.
 - **Tauc Plot**: Generate the Tauc plot for direct and indirect transitions.
 - **Band Gap Calculation**: Perform a linear fit on a selected range of the Tauc plot to calculate the band gap energy.
-- **Data Export**: Export the calculated data (Tauc plot values, linear fit results, and estimated band gap) to CSV and TXT files.
+- **Data Export**: Export the calculated data (Tauc plot values, linear fit results, and estimated band gap) to CSV file.
+- **Quick and Dirty Literature Reveiw (Beta Feature)**: Perform a literature review about the material under investigation. The band gap is shown only for open-source journals with a webpage view.
 
 ## Installation
 
