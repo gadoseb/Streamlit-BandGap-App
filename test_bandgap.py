@@ -30,8 +30,12 @@ def load_data(uploaded_file, file_type):
         return pd.read_csv(uploaded_file, delimiter='\t')  # Assuming tab-delimited txt file
 
 # Export data to CSV
-def export_to_csv(photon_energy, y, x_fit, y_fit, band_gap):
+def export_to_csv(wavelength, absorbance, reflectance, transmittance, photon_energy, y, x_fit, y_fit, band_gap):
     df = pd.DataFrame({
+        'Wavelength (nm)': wavelength,
+        'Absorbance': absorbance,
+        'Reflectance': reflectance,
+        'Transmittance': transmittance,
         'Photon Energy (eV)': photon_energy,
         'Tauc Plot Value': y,
         'Fitted Photon Energy (eV)': np.concatenate([x_fit, np.full(len(photon_energy) - len(x_fit), np.nan)]),
@@ -263,7 +267,7 @@ def main():
             y = np.sqrt(alpha * photon_energy)
 
         # Plot Reflectance Spectrum
-        st.write("Transmittance Spectrum:")
+        st.subheader("Transmittance Spectrum:")
         fig, ax = plt.subplots()
         ax.plot(wavelength, transmittance, label=mode)
         ax.set_xlabel('Wavelength')
@@ -272,16 +276,16 @@ def main():
         st.pyplot(fig)
 
         # Plot Reflectance Spectrum
-        st.write("Reflectance Spectrum:")
+        st.subheaderheader("Reflectance Spectrum:")
         fig, ax = plt.subplots()
-        ax.plot(wavelength, reflectance, label='Reflectance', color='orange')
+        ax.plot(wavelength, reflectance, label='Reflectance', color='black')
         ax.set_xlabel('Wavelength')
         ax.set_ylabel('Reflectance')
         plt.legend()
         st.pyplot(fig)
 
         # Plot Absorbance Spectrum
-        st.write("Absorbance Spectrum:")
+        st.subheader("Absorbance Spectrum:")
         fig, ax = plt.subplots()
         ax.plot(wavelength, absorbance, label='Absorbance', color='orange')
         ax.set_xlabel('Wavelength')
@@ -290,7 +294,7 @@ def main():
         st.pyplot(fig)
 
         # Tauc Plot
-        st.write("Tauc Plot:")
+        st.subheader("Tauc Plot:")
         fig, ax = plt.subplots()
         ax.plot(photon_energy, y, label=f'Tauc Plot ({transition_type})')
         ax.set_xlabel('Photon Energy (eV)')
@@ -299,7 +303,7 @@ def main():
         st.pyplot(fig)
 
         # Linear region selection
-        st.write("Select the energy range for the linear region fitting:")
+        st.header("Select the energy range for the linear region fitting:")
         x_min = st.number_input("Minimum energy (eV):", min_value=float(photon_energy.min()), max_value=float(photon_energy.max()), value=float(photon_energy.min()))
         x_max = st.number_input("Maximum energy (eV):", min_value=float(photon_energy.min()), max_value=float(photon_energy.max()), value=float(photon_energy.max()))
 
@@ -312,7 +316,7 @@ def main():
         popt, _ = curve_fit(linear_fit, x_fit, y_fit)
 
         # Plot the linear fit
-        st.write("Linear Fit on the Selected Region:")
+        st.header("Linear Fit on the Selected Region:")
         fig, ax = plt.subplots()
         ax.plot(photon_energy, y, label=f'Tauc Plot ({transition_type})')
         ax.plot(x_fit, linear_fit(x_fit, *popt), 'r--', label='Linear Fit')
@@ -326,8 +330,8 @@ def main():
         st.write(f"Estimated Band Gap: {band_gap:.2f} eV")
 
         # Prepare data for export
-        csv_data = export_to_csv(photon_energy, y, x_fit, y_fit, band_gap)
-        txt_data = export_to_txt(photon_energy, y, x_fit, y_fit, band_gap)
+        csv_data = export_to_csv(wavelength, absorbance, reflectance, transmittance, photon_energy, y, x_fit, y_fit, band_gap)
+        #txt_data = export_to_txt(photon_energy, y, x_fit, y_fit, band_gap)
 
         # Provide download links
         st.download_button(
@@ -337,12 +341,12 @@ def main():
             mime="text/csv"
         )
 
-        st.download_button(
-            label="Download TXT",
-            data=txt_data,
-            file_name="band_gap_results.txt",
-            mime="text/plain"
-        )
+        #st.download_button(
+            #label="Download TXT",
+            #data=txt_data,
+            #file_name="band_gap_results.txt",
+            #mime="text/plain"
+        #)
 
         # Add literature benchmark feature
         st.title("Quick and Dirty Literature Review")
