@@ -203,11 +203,6 @@ def main():
         # Clean the data to keep only rows with valid numerical values
         data_cleaned = data.apply(pd.to_numeric, errors='coerce').dropna()
 
-        # Check if cleaned data is empty
-        if data_cleaned.empty:
-            st.error("No valid numerical data available for calculations.")
-            return
-
         # Let the user choose which columns to use for wavelength and signal (reflectance/transmittance)
         column1 = st.selectbox("Select Column 1 (Wavelength in nm):", data_cleaned.columns)
         column2 = st.selectbox("Select Column 2 (Reflectance or Transmittance):", data_cleaned.columns)
@@ -219,13 +214,6 @@ def main():
         # Display cleaned data with headers
         st.write("Cleaned Data Preview:")
         st.write(data_clean.head())
-
-        # Check if the cleaned data is empty before proceeding
-        if data_clean.empty:
-            st.error("No valid numerical data available for calculations.")
-        else:
-            # Proceed with calculations using data_clean['Wavelength (nm)'] and data_clean['Signal']
-            st.write("Proceeding with calculations on the cleaned data...")
 
         # Let the user choose the mode of the data (Reflectance or Transmittance)
         mode = st.selectbox("Select Data Mode", ["Reflectance", "Transmittance"])
