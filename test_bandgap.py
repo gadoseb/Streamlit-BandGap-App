@@ -327,7 +327,7 @@ def main():
 
         # Prepare data for export
         csv_data = export_to_csv(photon_energy, y, x_fit, y_fit, band_gap)
-        txt_data = export_to_txt(wavelength, reflectance, absorbance, transmittance, photon_energy, y, x_fit, y_fit, band_gap)
+        txt_data = export_to_txt(photon_energy, y, x_fit, y_fit, band_gap)
 
         # Provide download links
         st.download_button(
