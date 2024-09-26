@@ -410,25 +410,20 @@ def main():
         x_fit, y_fit, popt = best_fit
 
         # Plot the original data and the best linear fit
-        plt.figure(figsize=(10, 6))
-        plt.plot(photon_energy, y, label='Original Data', color='blue')
-        plt.plot(x_fit, linear_fit(x_fit, *popt), label='Best Linear Fit', color='red', linewidth=2)
-        plt.xlabel('Photon Energy (eV)')
-        plt.ylabel('y Values')
-        plt.title('Best Linear Fit Region')
+        fig, ax = plt.subplots()
+        ax.plot(photon_energy, y, label=f'Tauc Plot')
+        ax.plot(x_fit, linear_fit(x_fit, *popt), label='Best Linear Fit', label='Linear Fit')
+        ax.set_xlabel('Photon Energy (eV)')
+        ax.set_ylabel(r'$(\alpha h\nu)^n$')
         plt.legend()
-
-        # Show the plot in Streamlit
-        st.pyplot(plt)
+        st.pyplot(fig)
 
         # Display the metrics
-        st.write("### Fit Quality Metrics:")
-        st.metric("R² Value", f"{best_metrics['R²']:.4f}")
-        st.metric("RMSE", f"{best_metrics['RMSE']:.4f}")
-        st.metric("MAE", f"{best_metrics['MAE']:.4f}")
+        st.write("#### Fit Quality Metrics:")
+        st.metric("R² Value", f"{best_metrics['R²']}")
+        st.metric("RMSE", f"{best_metrics['RMSE']}")
+        st.metric("MAE", f"{best_metrics['MAE']}")
         st.write(f"Residuals: {best_metrics['Residuals']}")
-
-
 
         # LITERATURE REVIEW
         
