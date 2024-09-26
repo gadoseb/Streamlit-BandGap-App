@@ -246,7 +246,7 @@ def main():
         # Plot Reflectance Spectrum
         st.write("Reflectance Spectrum:")
         fig, ax = plt.subplots()
-        ax.plot(wavelength, reflectance, label='Reflectance')
+        ax.plot(wavelength, signal, label=mode)
         ax.set_xlabel('Wavelength')
         ax.set_ylabel('Reflectance')
         plt.legend()
