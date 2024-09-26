@@ -8,6 +8,29 @@ import requests
 import re
 from bs4 import BeautifulSoup
 
+def auto_detect_linear_region(photon_energy, y, window_size=10):
+    best_fit = None
+    best_r_squared = -np.inf  # Start with a very low R² value
+
+    for i in range(len(photon_energy) - window_size):
+        # Select a window of data for fitting
+        x_fit = photon_energy[i:i + window_size]
+        y_fit = y[i:i + window_size]
+
+        # Perform linear fit
+        popt, _ = curve_fit(linear_fit, x_fit, y_fit)
+        residuals = y_fit - linear_fit(x_fit, *popt)
+        ss_res = np.sum(residuals**2)
+        ss_tot = np.sum((y_fit - np.mean(y_fit))**2)
+        r_squared = 1 - (ss_res / ss_tot)
+
+        # Track the best fitting region with the highest R² value
+        if r_squared > best_r_squared:
+            best_r_squared = r_squared
+            best_fit = (x_fit, y_fit, popt)
+
+    return best_fit
+
 # Define the Tauc plot fitting function (for linear region)
 def linear_fit(x, m, c):
     return m * x + c
@@ -335,6 +358,32 @@ def main():
         band_gap = -popt[1] / popt[0]
         st.write(f"Estimated Band Gap: {band_gap:.2f} eV")
 
+        # Automatically detect linear region for fitting
+        st.write("Automatically detecting linear region for fitting...")
+
+        # Call the function to detect the linear region
+        best_fit = auto_detect_linear_region(photon_energy, y)
+
+        if best_fit:
+            x_fit, y_fit, popt = best_fit
+            
+            # Perform the linear fit and extrapolate to find the band gap
+            band_gap = -popt[1] / popt[0]
+            st.write(f"Estimated Band Gap (automatically detected): {band_gap:.2f} eV")
+
+            # Plot the Tauc plot with the automatically detected linear region
+            st.write("Tauc Plot with Automatically Detected Linear Fit:")
+            fig, ax = plt.subplots()
+            ax.plot(photon_energy, y, label=f'Tauc Plot ({transition_type})')
+            ax.plot(x_fit, linear_fit(x_fit, *popt), 'r--', label='Linear Fit (Auto)')
+            ax.set_xlabel('Photon Energy (eV)')
+            ax.set_ylabel(r'$(\alpha h\nu)^n$')
+            plt.legend()
+            st.pyplot(fig)
+        else:
+            st.error("Could not automatically detect a linear region for fitting.")
+
+
         # Prepare data for export
         csv_data = export_to_csv(wavelength, absorbance, reflectance, transmittance, photon_energy, y, x_fit, y_fit, band_gap)
         #txt_data = export_to_txt(photon_energy, y, x_fit, y_fit, band_gap)
@@ -364,8 +413,8 @@ def main():
         #cas_number = st.text_input("Enter CAS number (optional):")
 
         if st.button("Search Literature"):
-            if common_name: #or chemical_composition or cas_number:
-                results = search_literature(common_name) #, chemical_composition, cas_number)
+            if common_name: 
+                results = search_literature(common_name)
             if results:
                 st.write("Literature Search Results:")
                 for item in results:
