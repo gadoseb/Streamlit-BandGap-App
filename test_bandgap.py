@@ -207,6 +207,18 @@ def main():
         # Extract the selected columns
         wavelength = data[column1]
         signal = data[column2]  # This can be either reflectance or transmittance based on user selection
+        
+        # Convert the columns to numeric, and coerce any non-numeric values to NaN
+        wavelength = pd.to_numeric(wavelength, errors='coerce')
+        signal = pd.to_numeric(signal, errors='coerce')
+
+        # Drop rows where either wavelength or signal is NaN (i.e., invalid data)
+        data_clean = pd.DataFrame({'wavelength': wavelength, 'signal': signal}).dropna()
+
+        # Check if there's any valid data left
+        if data_clean.empty:
+            st.error("No valid numeric data found in the selected columns.")
+            st.stop()
 
         # Let the user select the starting row for the calculation
         max_rows = len(data)
