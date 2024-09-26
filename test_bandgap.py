@@ -267,40 +267,39 @@ def main():
         else:
             y = np.sqrt(alpha * photon_energy)
 
+        fig, axs = plt.subplots(1, 4)
+
+        st.header("Plots")
+        
         # Plot Reflectance Spectrum
-        st.subheader("Transmittance Spectrum:")
-        fig, ax = plt.subplots()
-        ax.plot(wavelength, transmittance, label="Transmittance")
-        ax.set_xlabel('Wavelength')
-        ax.set_ylabel("Transmittance")
-        plt.legend()
-        st.pyplot(fig)
+        axs[0].set_title("Transmittance Spectrum:")
+        axs[0].plot(wavelength, transmittance, label="Transmittance")
+        axs[0].set_xlabel('Wavelength')
+        axs[0].set_ylabel("Transmittance")
+        axs[0].legend()
 
         # Plot Reflectance Spectrum
-        st.subheader("Reflectance Spectrum:")
-        fig, ax = plt.subplots()
-        ax.plot(wavelength, reflectance, label='Reflectance', color='black')
-        ax.set_xlabel('Wavelength')
-        ax.set_ylabel('Reflectance')
-        plt.legend()
-        st.pyplot(fig)
+        axs[1].set_title("Reflectance Spectrum:")
+        axs[1].plot(wavelength, reflectance, label='Reflectance', color='black')
+        axs[1].set_xlabel('Wavelength')
+        axs[1].set_ylabel('Reflectance')
+        axs[1].legend()
 
         # Plot Absorbance Spectrum
-        st.subheader("Absorbance Spectrum:")
-        fig, ax = plt.subplots()
-        ax.plot(wavelength, absorbance, label='Absorbance', color='orange')
-        ax.set_xlabel('Wavelength')
-        ax.set_ylabel('Absorbance')
-        plt.legend()
-        st.pyplot(fig)
+        axs[2].set_title("Absorbance Spectrum:")
+        axs[2].plot(wavelength, absorbance, label='Absorbance', color='orange')
+        axs[2].set_xlabel('Wavelength')
+        axs[2].set_ylabel('Absorbance')
+        axs[2].legend()
 
         # Tauc Plot
-        st.subheader("Tauc Plot:")
-        fig, ax = plt.subplots()
-        ax.plot(photon_energy, y, label=f'Tauc Plot ({transition_type})')
-        ax.set_xlabel('Photon Energy (eV)')
-        ax.set_ylabel(r'$(\alpha h\nu)^n$')
-        plt.legend()
+        axs[3].set_title("Tauc Plot:")
+        axs[3].plot(photon_energy, y, label=f'Tauc Plot ({transition_type})')
+        axs[3].set_xlabel('Photon Energy (eV)')
+        axs[3].set_ylabel(r'$(\alpha h\nu)^n$')
+        axs[3].legend()
+
+        plt.tight_layout()
         st.pyplot(fig)
 
         # Linear region selection
