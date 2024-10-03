@@ -97,16 +97,3 @@ $$
 $$
 
 The linear region of the Tauc plot is used to extrapolate the band gap.
-
-## Installation
-
-1. Clone this repository:
-   ```bash
-   git clone https://github.com/yourusername/bandgap-calculation.git
-   cd bandgap-calculation
-2. Install the required dependencies using pip:
-   ```bash
-   pip install -r requirements.txt
-3. Run the Streamlit app:
-   ```bash
-   streamlit run bandgap.py
